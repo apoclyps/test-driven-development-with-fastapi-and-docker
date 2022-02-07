@@ -9,6 +9,8 @@ services:
     ports:
       - 8004:8000
     environment:
+      - DATABASE_TEST_URL=postgres://postgres:postgres@web-db:5432/web_test
+      - DATABASE_URL=postgres://postgres:postgres@web-db:5432/web_dev
       - ENVIRONMENT=dev
       - TESTING=0
     depends_on:
