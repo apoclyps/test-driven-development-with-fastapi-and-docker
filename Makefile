@@ -1,6 +1,8 @@
-.PHONY: help build run start debug stop clean logs shell network lint test
+.PHONY: help build run start debug stop clean logs shell network lint test artifact publish release migrate deploy docs
 
 default: help
+
+HEROKU_DEPLOYMENT = "tdd-fastapi-with-docker"
 
 build: ## Build the web container
 	@docker-compose build web
@@ -47,3 +49,27 @@ test-shell: ## Spin up a shell in the test container
 
 unit: ## Run a single unittest or file e.g. `make unit test=test.py::test`
 	@docker-compose run --rm web pytest -s -vvv $(test)
+
+artifact: ## Build a production container (to be publish to the Heroku Container Registry)
+	@echo "Building the application"
+	@docker build -f src/Dockerfile.prod -t registry.heroku.com/$(HEROKU_DEPLOYMENT)/web ./src
+
+publish: ## Publish the latest version of the application to Heroku Container Registry
+	@echo "Pushing the application"
+	@docker tag registry.heroku.com/$(HEROKU_DEPLOYMENT)/web registry.heroku.com/$(HEROKU_DEPLOYMENT)/web:latest
+	@docker push registry.heroku.com/$(HEROKU_DEPLOYMENT)/web:latest
+
+release: ## Deploy the latest version of the application to Heroku
+	@echo "Deploying the application"
+	@heroku container:release web --app $(HEROKU_DEPLOYMENT)
+
+migrate: ## Run the database migrations
+	@echo "Running migrations"
+	@heroku run aerich upgrade --app $(HEROKU_DEPLOYMENT)
+
+deploy: artifact publish release migrate ## Performs a deployment to Heroku
+	@echo "Deployment complete"
+
+docs: ## Open the documentation in the browser
+	@echo "Opening the documentation"
+	@heroku open --app $(HEROKU_DEPLOYMENT) /docs
