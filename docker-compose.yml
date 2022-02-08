@@ -14,7 +14,7 @@ services:
       - ENVIRONMENT=dev
       - TESTING=0
     depends_on:
-      - web-db      
+      - web-db
 
   web-db:
     build:
