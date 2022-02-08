@@ -41,7 +41,7 @@ lint: ## lint and autocorrect the code
 	@docker-compose run --rm --no-deps web sh -c "black . && isort . && flake8 ."
 
 test: build network ## Run the unit tests and linters
-	@docker-compose run --rm web sh -c "pytest -s -vvv tests && black --check --diff . && isort --check-only --diff . && flake8 ."
+	@docker-compose run --rm web sh -c "pytest -s -vvv --cov="." tests && black --check --diff . && isort --check-only --diff . && flake8 ."
 
 test-shell: ## Spin up a shell in the test container
 	@docker-compose build web
