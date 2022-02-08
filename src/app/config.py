@@ -5,7 +5,7 @@ from functools import lru_cache
 from pydantic import BaseSettings, AnyUrl
 
 
-log = logging.getLogger("uvicorn")
+log = logging.getLogger(name="uvicorn")
 
 
 class Settings(BaseSettings):
