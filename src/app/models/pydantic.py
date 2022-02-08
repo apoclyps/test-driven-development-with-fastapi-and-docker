@@ -5,5 +5,5 @@ class SummaryPayloadSchema(BaseModel):
     url: str
 
 
-class SummaryResponseSchema(BaseModel):
+class SummaryResponseSchema(SummaryPayloadSchema):
     id: int
