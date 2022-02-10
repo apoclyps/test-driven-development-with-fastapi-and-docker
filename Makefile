@@ -1,8 +1,9 @@
-.PHONY: help build run start debug stop clean logs shell network lint test artifact publish release migrate deploy docs
+.PHONY: help build run start debug stop clean logs shell network lint test package artifact publish release migrate deploy docs
 
 default: help
 
 HEROKU_DEPLOYMENT = "tdd-fastapi-with-docker"
+USERNAME = "apoclyps"
 
 build: ## Build the web container
 	@docker-compose build web
@@ -49,6 +50,11 @@ test-shell: ## Spin up a shell in the test container
 
 unit: ## Run a single unittest or file e.g. `make unit test=test.py::test`
 	@docker-compose run --rm web pytest -s -vvv $(test)
+
+package:  # Publish Image to Github Registry
+	@docker build -f src/Dockerfile.prod -t docker.pkg.github.com/apoclyps/test-driven-development-with-fastapi-and-docker/summarizer:latest ./src
+	@docker login docker.pkg.github.com -u ${USERNAME} -p ${CI_TOKEN}
+	@docker push docker.pkg.github.com/apoclyps/test-driven-development-with-fastapi-and-docker/summarizer:latest
 
 artifact: ## Build a production container (to be publish to the Heroku Container Registry)
 	@echo "Building the application"

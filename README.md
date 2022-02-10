@@ -18,6 +18,7 @@ This will run the following targets in order:
 
 ```bash
 make artifact
+make package
 make publish
 make release
 make migrate
