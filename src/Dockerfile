@@ -1,4 +1,4 @@
-FROM python:3.10.2-slim-buster
+FROM python:3.10.1-slim-buster
 
 # set working directory
 WORKDIR /usr/src/app
@@ -15,7 +15,8 @@ RUN apt-get update \
 # install python dependencies
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+COPY ./requirements-dev.txt .
+RUN pip install -r requirements-dev.txt
 
 # add app
 COPY . .
