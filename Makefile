@@ -30,6 +30,12 @@ clean: ## delete all data from the local database
 logs: ## show the application logs
 	@docker-compose logs --follow web
 
+db.upgrade:  ## upgrade the database schema
+	@docker-compose run --rm web aerich upgrade
+
+db.downgrade:  ## upgrade the database schema
+	@docker-compose run --rm web aerich downgrade
+
 shell: ## shell into a development container
 	@docker-compose build web
 	@docker-compose run --rm web sh
@@ -52,7 +58,7 @@ integration-test: build network ## Run the unit tests and linters
 	@echo "Running integration tests"
 	@docker-compose run --rm web sh -c "pytest tests/integration -s -vvv  --cov="." tests && black --check --diff . && isort --check-only --diff . && flake8 ."
 
-test-shell: ## Spin up a shell in the test container
+test-shell: ## Spin up a shell in a container
 	@docker-compose build web
 	@docker-compose run --rm web sh
 

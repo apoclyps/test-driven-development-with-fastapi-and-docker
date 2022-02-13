@@ -3,25 +3,21 @@ from datetime import datetime
 
 import pytest
 
-from app.api import crud
+from app.api import crud, summaries
 
 
-def test_create_summary(test_app, monkeypatch):
-    test_request_payload = {"url": "https://foo.bar"}
-    test_response_payload = {"id": 1, "url": "https://foo.bar"}
+def test_create_summary(test_app_with_db, monkeypatch):
+    def mock_generate_summary(summary_id, url):  # NOQA: U100
+        return None
 
-    async def mock_post(payload):  # NOQA: U100
-        return 1
+    monkeypatch.setattr(summaries, "generate_summary", mock_generate_summary)
 
-    monkeypatch.setattr(crud, "post", mock_post)
-
-    response = test_app.post(
-        "/summaries/",
-        data=json.dumps(test_request_payload),
+    response = test_app_with_db.post(
+        "/summaries/", data=json.dumps({"url": "https://foo.bar"})
     )
 
     assert response.status_code == 201
-    assert response.json() == test_response_payload
+    assert response.json()["url"] == "https://foo.bar"
 
 
 def test_create_summaries_invalid_json(test_app):
