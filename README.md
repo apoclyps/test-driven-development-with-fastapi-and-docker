@@ -1,5 +1,7 @@
 # Test Driven Development with FastAPI and Docker
 
+![Continuous Integration and Delivery](https://github.com/apoclyps/test-driven-development-with-fastapi-and-docker/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=main)
+
 ### How to Deploy the API
 
 ```bash
